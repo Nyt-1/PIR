@@ -1,0 +1,278 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb,amscd,epsfig,url}
+\usepackage{fullpage}
+\usepackage{tikz}
+\usepackage{enumerate}
+\usepackage{paralist}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\def\Z{{\mathbb Z}}
+\def\Q{{\mathbb Q}}
+\def\R{{\mathbb R}}
+\def\N{{\mathbb N}}
+\def\T{{\mathcal{C} T}}
+\def\K{{\mathcal{C} K}}
+\def\E{{\mathbb{E}}}
+\newcommand{\hus}{\hfill\break}
+\newcommand{\Div}{\mathrm{Div}}
+\newcommand{\bull}{\textbullet\;\;}
+\def\iso{{\operatorname{\ \approx \ }}}   % isomorvarphism
+\def\im{{\operatorname{im}}}              % image
+\def\Hom{{\operatorname{Hom}}}           % homomorvarphisms
+\def\line{{\operatorname{line} \,}}       % line graph
+\def\sd{{\operatorname{sd \,}}}           % first edge subdivision graph
+\def\coker{{\operatorname{coker}}}        % cokernel
+\def\lcm{{\operatorname{lcm}}}             % least common multiple
+\newcommand{\gcdd}{\gamma}              
+\def\del{{\partial}}                      % signed incidence matrix
+\def\<{{\langle}} \def\>{{\rangle}}       % Inner product
+\def\ZC{{Z^\#}}                           % cycle space
+\setlength{\textheight}{9in}               
+%\setlength{\textwidth}{6in}               % width of text
+%\setlength{\oddsidemargin}{0in}           % odd page left margin
+%\setlength{\evensidemargin}{0in}          % even page left margin 
+
+
+\newcommand{\heading}[1]{\noindent\textbf{#1}}
+\newcommand{\exercise}[1]{\heading{Exercise {#1}} }
+\newcommand{\solution}{\heading{Solution.} }
+
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calA}{\mathcal{A}}
+
+\newcommand{\david}[1]{{\textbf{David says: {#1}}}}
+
+\title{Some Notes about Grolmusz's Set Systems}
+
+\begin{document}
+\maketitle
+
+\section{A Combinatorial Version of BBR Polynomials}
+
+We will use the notation $[n] = \{1,2,\ldots,n\}$.
+
+\begin{theorem}[Special Case of BBR]
+  There exists a family of polynomials $Q_n \in \Z[X_1,\ldots,X_n]$,
+  $n\in\N$, with
+  the following properties:
+  \begin{enumerate}
+    \item $Q_n$ is multilinear, meaning that the exponent on any $X_i$ in
+      any monomial is at most $1$.
+    \item All coefficients of $Q_n$ are between $0$ and $5$.
+    \item $Q_n(1,1,\ldots,1) \equiv 0 \pmod 6$.
+    \item For all $x\in \bits^n\setminus \{1^n\}$, 
+      $Q_n(x) \not\equiv 0 \pmod 6$.
+    \item The degree of $Q_n$ is $O(\sqrt{n})$.
+  \end{enumerate}
+\end{theorem}
+We note that given a polynomial satisfying only the last three properties, it is
+easy to modify it so that it satisfies the first two as well.
+
+
+Below we will use a correspondence between multilinear polynomials and families
+of subsets. Here is an explicit example.
+\begin{example}
+  Let $Q(X_1,X_2,X_3) = 2X_1X_2 + X_1X_2X_3 + 4X_3$. We will first write $Q$ as
+  a sum of monomials with coefficient $1$:
+  \[
+    Q(X_1,X_2,X_3) = X_1X_2 + X_1X_2 + X_1X_2X_3 + X_3 + X_3 + X_3 + X_3
+  \]
+  Now consider one of the monomials, say $X_1 X_2$. We can map this monomial to the
+  set of its indices, which in this case is $\{1,2\}$. Applying this to all of
+  the monomials, we get a multiset of subsets of $[n]$:
+  \[
+    \calS(Q) = \{ \{1,2\},  \{1,2\}, \{1,2,3\}, \{3\}, \{3\},\{3\},\{3\} \}.
+  \]
+  Note that $|\calS(Q)| = 7$, the sum of the coefficients of $Q$.
+\end{example}
+
+The follow corollary describes the combinatorial structure that is really needed
+for Grolmusz's construction.
+\begin{corollary}\label{cor:sets}
+  For every $n\in\N$, there exists a multi-family $\calS$ of $D$ (possibly
+  repeating) subsets of $[n]$ with the following properties:
+  \begin{enumerate}
+    \item $D \equiv 0 \pmod 6$
+    \item For all $T\subseteq [n]$, $T\neq [n]$,
+      \[
+        \left|\{ S \in \calS :  S \subseteq T\}\right| \not\equiv 0
+        \mod 6.
+      \]
+    \item $D = n^{O(\sqrt{n})}$.
+    \item $\max_{S \in\calS} |S| = O(\sqrt{n})$.
+  \end{enumerate}
+\end{corollary}
+\begin{proof}
+
+  For a given $n$, take the polynomial $Q = Q_n$ from the theorem.  The family
+  $\calS = \calS(Q)$ will satisfy the corollary, where $D = |\calS(Q)|$. 
+
+  The first property follows since $Q(1,\ldots,1)$ is equal to the sum of the
+  coefficients of $Q$, and so is $D = |\calS(Q)|$ (by the discussion at the end
+  of the example).  By the theorem, this value is congruent to $0$ modulo $6$.
+
+  To prove the second property, let $T\subseteq [n]$, $T\neq [n]$. Let $x_T \in
+  \bits^n$ be the characteristic vector of $T$. Consider a monomial that
+  corresponds to set $S \in \calS$.  Then this monomial evaluates to $1$
+  on input $x_T$ if $S \subseteq T$, and $0$ otherwise. Since $Q(x_T)$ is the
+  sum of the
+  evaluations of all its monomials,
+  \[
+    Q(x_T) = \left|\{ S\in \calS :  S \subseteq T\}\right|.
+  \]
+  Now property (4) of $Q$ and the fact that $x_T \neq 1^n$  implies this value
+  is not congruent $0$ modulo $6$, establishing the second property of $\calS$.
+
+  We next consider the third property. Above we showed that $D$ is the
+  sum of coefficients of $Q$. Since each coefficient is at most $5$, 
+  we get that $D$ is at most $5$ times the number of monomials
+  of $Q$. Let $d= \deg Q$. Since $d = O(\sqrt{n})$, we have
+  $d \leq n/2$ for sufficiently large $n$. Then we have
+  \[
+    D \leq 5 \sum_{i=0}^{d} \binom{n}{i} \leq 5d \binom{n}{d}
+    \leq 5d n^d = n^{O(\sqrt{n})}.
+  \]
+
+  The final property follows from the degree bound on $Q$.
+\end{proof}
+
+\section{Grolmusz's Construction}
+
+
+\begin{theorem}
+  For each $n\in\N$ there exists a family $\calA$ of $n^n$ subsets over a
+  universe of size $n^{O(\sqrt{n})}$ with the following properties:
+  \begin{enumerate}
+    \item For all $A\in\calA$, $|A| \equiv 0 \pmod 6$.
+    \item For all $A\neq A'\in \calA$, $|A \cap A'| \not\equiv 0 \pmod 6$.
+  \end{enumerate}
+\end{theorem}
+
+The interesting part of this theorem is that if $6$ is replaced with a prime
+then the largest possible $\calA$ has size $n^{O(\sqrt{n})}$.
+
+\begin{proof}
+  Apply the previous corollary to produce a multiset $\calS =
+  \{S_1,\ldots,S_D\}$ satisfying the conditions of Corollary~\ref{cor:sets}.
+
+  Fix a parameter $N\in\N$ to be discussed later (ultimately it is set to $n$).
+  The universe will be
+  \[
+    U = \{  (j,z) : 1\leq j \leq D, z\in[N]^{|S_j|} \}.
+  \]
+  Note that $\calS$ was a multiset, meaning it allows repetitions, but
+  $U$ is defined to be a \emph{set} since it refers to subscripts $j$, which
+  are all unique, rather than sets $S_j$ which may repeat. 
+
+  The family $\calA$ will have one member $A_x$ for each $x\in[N]^n$, where
+  \[
+    A_x = \{ (j,z) : \forall i\in S_j, z_i = x_i\}.
+  \]
+  We can think of $(j,z)$ as specifying a vector $v \in ([N]\cup\{\bot\})^n$,
+  where the values of $z$ are placed at the positions pointed to by $S_j$,
+  and the rest of the entries (not in in $S_j$) are set to $\bot$.
+  Then $(j,z)\in A_x$ if and only if the non-$\bot$ entries of $v$ agree
+  with the corresponding entries of $x$.
+
+  We first calculate the size of the universe, in term of $N$. We have
+  \[
+    |U| = \sum_{j =1}^D N^{|S_j|} = 
+    \sum_{j=1}^D N^{O(\sqrt{n})} =
+     D N^{O(\sqrt{n})} = 
+     n^{O(\sqrt{n})} N^{O(\sqrt{n})}.
+  \]
+  Recall that we'd like $U$ to be as small as possible, and $\calA$ to be as
+  large as possible. From this bound we can see that setting $N=\theta(n)$
+  results in no asymptotic ``cost'' in terms of the universe size, but
+  larger settings would.
+
+  Next, it is easy to see that $|\calA| = N^n$. Setting larger $N$ would be
+  profitable here.
+
+  Each $A_x \in \calA$ satisfies $|A_x| = D$, since for each $j \in [D]$,
+  there is exactly one $z\in [N]^{|S_j|}$ that agrees with $x$ in the positions
+  specified by $S_j$. Since $D \equiv 0 \pmod 6$, this first property follows.
+
+
+  Now consider $A_x, A_y \in \calA$, $x \neq y$. We have
+  \[
+    A_x\cap A_y = \{ (j,z) : \forall i\in S_j, z_i = x_i = y_i\}.
+  \]
+  Let $T_{xy} = \{i \in [n] : x_i = y_i\}$. Note that $(j,z)$ can only be a member of
+  $A_x \cap A_y$ if $x_i = y_i$ for all $i \in S_j$, so we must have $S_j \subseteq
+  T_{xy}$.  In fact, for each $S_k\in\calS$ such that $S_k \subseteq T_{xy}$, there will be
+  exactly one member $(k,z)\in A_x \cap A_y$, namely the member with the correct
+  entries for $z$. Thus
+  \[
+    |A_x\cap A_y| = |\{ k \in [D] : S_k \subseteq T_{xy} \}|.
+  \]
+  By the second property of $\calS$, this value is not congruent to $0$ modulo
+  $6$. (Note that $T_{xy} \neq [n]$.)
+
+  As promised, if we set $N=n$ we get the claimed sizes of $U$ and $\calA$.
+\end{proof}
+
+\subsection{Interpreting the Bound and Explaining the Parameter Setting}
+
+Let's informally recover the version the theorem where one fixes the universe
+size so some $|U| = u$ and asks how large $|\calA|$ can be. In the theorem,
+we got a sequence of constructions (one for each $n\in\N$) with
+$u = n^{O(\sqrt{n})}$ and $|\calA| = n^n = u^{\Omega(\sqrt{n})}$. To get
+a direct comparison we need to relate $\sqrt{n}$ to $u$. This follows
+from
+\[
+  \log u = \log\left(n^{O(\sqrt{n})}\right)
+  = O(\sqrt{n}\log n),
+\]
+and
+\[
+  \log\log u = \log\left(O(\sqrt{n}\log n)\right)
+  = O(\log n + \log\log n) = O(\log n).
+\]
+Combining these we get (informally, at least)
+\[
+  \sqrt{n} = \Omega(\log u / \log \log u).
+\]
+Therefore we 
+\[
+  |\calA| = u^{\Omega\left(\frac{\log u}{\log \log u}\right)},
+\]
+which is the bound of Grolmusz.
+
+
+Now we can go back and try to explain why $N$ was chosen to be $n$.  The proof
+still works for any $N \geq 2$, but provides a different trade-off between $|U|$
+and $|\calA|$. Taking $N < n$ wouldn't make sense because the universe size
+would not shrink but $|\calA|$ would, which is the opposite of what we want.
+
+We could, however, we take something like $N = n^n$. In this case $|U| =
+n^{O(n^{1.5})}$ and $|\calA| = n^{n^2}$. 
+But then we have
+\[
+  \log u = \log\left(n^{O(n)}\right) = O(n\log n),
+\]
+and
+\[
+  \log \log u = O(\log n),
+\]
+which implies
+\[
+  \sqrt{n} = \Omega(\sqrt{\log u/\log \log u}).
+\]
+Thus 
+\[
+  |\calA| = u^{\Omega\left(\sqrt{\frac{\log u}{\log \log u}}\right)},
+\]
+which is worse but not trivial.
+\end{document}
+
